@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #1d283a;
+    font-family: Poppins;
+}
+
+
+h1{
+    text-align: center;
+    color: aliceblue;
+    font-size: 40px;
+    margin-top: 20px;
+    font-family: Montserrat;
+}
+
+#ultime{
+    display: flex;
+    background:#27324e;
+    height: 500px;
+    margin: 2%;
+    border-radius: 15px;
+    padding: 1%;
+    color: white;
+}
+
+#form{
+    width: 450px;
+}
+
+#affichage{
+    background: #6ca2d6;
+    border-radius: 15px;
+    width: 500px;
+    margin-left: 17%;
+}
+
+/* MENU */
+#menue{
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    width: 250px;
+    padding: 20px;
+    background: #313f64;
+    border-radius: 15px;
+    margin-top: 20%;
+    margin-left: 30%;
+}
+
+button{
+    width: 240px;
+    height: 55px;
+    border: none;
+    border-radius: 10px;
+    background: royalblue;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    transition: .2s ease;
+    cursor: pointer;
+}
+
+button:hover{
+    transform: scale(1.08);
+    outline: 3px solid rgba(0,102,255,0.18);
+    outline-offset: 3px;
+}
+
+/* FORMS */
+.section{
+    display: none;
+    flex-direction: column;
+    row-gap: 15px;
+    animation: fade 0.35s ease;
+}
+
+@keyframes fade{
+    from{opacity: 0; transform: translateY(10px);}
+    to{opacity: 1; transform: translateY(0);}
+}
+
+input, select{
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+input:hover, select:hover{
+    outline: 3px solid rgba(0,102,255,0.18);
+}
+
+#butsou{
+    width: 140px;
+    height: 45px;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* BLOC D'AFFICHAGE À DROITE */
+#affichage{
+    background: #ffff;
+    border-radius: 15px;
+    width: 450px;
+    padding: 15px;
+    margin-left: auto; /* pousse sur le côté droit */
+    margin-right: 2%;
+    overflow-y: auto;
+    color: white;
+    border-left: 4px solid royalblue;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* BOUTON RETOUR */
+.retour{
+    width: 120px;
+    height: 40px;
+    background: #444;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.retour:hover{
+    background: #666;
+    transform: scale(1.05);
+}
+/* BOUTON RETOUR */
+.retour{
+    width: 120px;
+    height: 40px;
+    background: #444;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+}

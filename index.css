@@ -1,0 +1,255 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: #ffffff;
+    color: #111;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+body.visible {
+    opacity: 1;
+}
+
+/* Barre de navigation (inchangée) */
+.barre_navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    z-index: 1000;
+    transition: all 0.4s ease;
+}
+
+.barre_navigation.scrolled {
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    z-index: 10;
+}
+
+.menu_navigation {
+    display: flex;
+    gap: 40px;
+}
+
+.menu_navigation a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.menu_navigation a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -8px;
+    left: 0;
+    background: #000;
+    transition: width 0.4s ease;
+}
+
+.menu_navigation a:hover,
+.menu_navigation a.actif {
+    color: #000;
+}
+
+.menu_navigation a:hover::after,
+.menu_navigation a.actif::after {
+    width: 100%;
+}
+
+/* Menu burger */
+.bouton_menu {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.barre {
+    width: 28px;
+    height: 3px;
+    background: #000;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+}
+
+.bouton_menu.actif .barre:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.bouton_menu.actif .barre:nth-child(2) {
+    opacity: 0;
+}
+
+.bouton_menu.actif .barre:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Hero – deux colonnes */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 5% 80px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 1400px;
+    width: 100%;
+    align-items: center;
+}
+
+/* Texte qui s'écrit (à droite) */
+.dynamic-text {
+    font-size: 3rem;
+    font-weight: bold;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #000;
+    text-align: left;
+}
+
+#changing-text::after {
+    content: "|";
+    animation: blink 1s infinite;
+    margin-left: 8px;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Bloc objectif (à gauche) */
+.objectif {
+    background: linear-gradient(to right, #e0e0e0, #ffffff);
+    padding: 50px 40px;
+    border-radius: 12px;
+    border: 2px solid #000;
+}
+
+.objectif .text {
+    font-size: 1.12rem;
+    margin-bottom: 40px;
+    color: #111;
+}
+
+.boutons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 36px;
+    border: 2px solid #000;
+    background: transparent;
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.4s ease;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: #000;
+    transition: height 0.4s ease;
+    z-index: -1;
+}
+
+.btn:hover::before {
+    height: 100%;
+}
+
+.btn:hover {
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 868px) {
+    .menu_navigation {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 80%;
+        max-width: 350px;
+        background: #fff;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        font-size: 1.5rem;
+        transition: right 0.5s cubic-bezier(0.77, 0, 0.18, 1);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu_navigation.visible {
+        right: 0;
+    }
+
+    .bouton_menu {
+        display: flex;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 60px;
+    }
+
+    .dynamic-text {
+        font-size: 3.2rem;
+        text-align: center;
+    }
+
+    .boutons {
+        justify-content: center;
+    }
+}
