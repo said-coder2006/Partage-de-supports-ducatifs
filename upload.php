@@ -74,13 +74,165 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestion PDF</title>
 <style>
-body { font-family: Poppins, sans-serif; background:#f5f5f5; padding:20px;}
-.container { max-width: 600px; margin:auto; background:white; padding:20px; border-radius:12px;}
-input, select, button { width:100%; padding:10px; margin:10px 0;}
-button { background:#222; color:white; border:none; cursor:pointer; border-radius:6px;}
-.card { padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between;}
+/* Styles pour la barre de navigation (ajoutés) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body { 
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f5f5f5; 
+    color: #111;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+body.visible {
+    opacity: 1;
+}
+
+.barre_navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    z-index: 1000;
+    transition: all 0.4s ease;
+}
+
+.barre_navigation.scrolled {
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    z-index: 10;
+}
+
+.menu_navigation {
+    display: flex;
+    gap: 40px;
+}
+
+.menu_navigation a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.menu_navigation a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -8px;
+    left: 0;
+    background: #000;
+    transition: width 0.4s ease;
+}
+
+.menu_navigation a:hover,
+.menu_navigation a.actif {
+    color: #000;
+}
+
+.menu_navigation a:hover::after,
+.menu_navigation a.actif::after {
+    width: 100%;
+}
+
+/* Menu burger */
+.bouton_menu {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.barre {
+    width: 28px;
+    height: 3px;
+    background: #000;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+}
+
+.bouton_menu.actif .barre:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.bouton_menu.actif .barre:nth-child(2) {
+    opacity: 0;
+}
+
+.bouton_menu.actif .barre:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Styles originaux fusionnés et adaptés */
+body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f5f5; padding:20px;}
+.container { max-width: 600px; margin:120px auto 20px; background:linear-gradient(to right, #e0e0e0, #ffffff); padding:40px; border-radius:12px; border:2px solid #000;}
+input, select, button { width:100%; padding:12px; margin:10px 0; border:2px solid #000; border-radius:6px; background:transparent; color:#000; }
+button { background:transparent; color:#000; border:2px solid #000; cursor:pointer; border-radius:8px; font-weight:600; position:relative; overflow:hidden; transition:color 0.4s ease; z-index:1; }
+button::before { content:''; position:absolute; bottom:0; left:0; width:100%; height:0; background:#000; transition:height 0.4s ease; z-index:-1; }
+button:hover::before { height:100%; }
+button:hover { color:white; }
+.card { padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between; }
+label { display:block; margin:10px 0 5px; font-weight:600; color:#111; }
+
+/* Responsive pour la nav */
+@media (max-width: 868px) {
+    .menu_navigation {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 80%;
+        max-width: 350px;
+        background: #fff;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        font-size: 1.5rem;
+        transition: right 0.5s cubic-bezier(0.77, 0, 0.18, 1);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu_navigation.visible {
+        right: 0;
+    }
+
+    .bouton_menu {
+        display: flex;
+    }
+
+    .container {
+        margin: 120px 20px 20px;
+        padding: 30px 20px;
+    }
+}
 </style>
 <script>
 // Changement dynamique des matières lors de la sélection du niveau
@@ -97,15 +249,77 @@ function updateMatieres(selectId, matiereId) {
         matiereSelect.appendChild(opt);
     });
 }
+
+// Fondu d’entrée
+window.addEventListener('load', () => {
+    document.body.classList.add('visible');
+});
+
+// Navbar au scroll
+const nav = document.getElementById('nav_bar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+    } else {
+        nav.classList.remove('scrolled');
+    }
+});
+
+// Menu burger
+const boutonMenu = document.getElementById('bouton_menu');
+const menu = document.getElementById('menu');
+
+boutonMenu.addEventListener('click', () => {
+    boutonMenu.classList.toggle('actif');
+    menu.classList.toggle('visible');
+});
+
+// Fermer le menu en cliquant sur un lien (mobile)
+document.querySelectorAll('#menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        boutonMenu.classList.remove('actif');
+        menu.classList.remove('visible');
+    });
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            window.scrollTo({
+                top: target.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
 </script>
 </head>
 
 <body>
 
+<!-- Barre de navigation ajoutée -->
+<nav class="barre_navigation" id="nav_bar">
+    <div class="logo">Saim</div>
+
+    <div class="menu_navigation" id="menu">
+        <a href="#" class="actif">Admin</a>
+        <a href="acceuil.html">Acceuil</a>
+    </div>
+
+    <div class="bouton_menu" id="bouton_menu">
+        <span class="barre"></span>
+        <span class="barre"></span>
+        <span class="barre"></span>
+    </div>
+</nav>
+
 <div class="container">
     <h2> Ajouter un PDF</h2>
-     <a href="acceuil.html"><button class="retour">← Retour</button></a>
-    <?php if ($message): ?><p><?= $message ?></p><?php endif; ?>
+     <a href="index.php"><button class="retour">← Retour</button></a>
+    <?php if ($message): ?><p><?= htmlspecialchars($message) ?></p><?php endif; ?>
     <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="action" value="upload">
 
